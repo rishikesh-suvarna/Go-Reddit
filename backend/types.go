@@ -33,7 +33,7 @@ type ThreadStore interface {
 
 type PostStore interface {
 	Post(id uuid.UUID) (Post, error)
-	Posts() ([]Post, error)
+	PostsByThread(threadID uuid.UUID) ([]Post, error)
 	CreatePost(post *Post) error
 	UpdatePost(post *Post) error
 	DeletePost(id uuid.UUID) error
@@ -41,7 +41,7 @@ type PostStore interface {
 
 type CommentStore interface {
 	Comment(id uuid.UUID) (Comment, error)
-	Comments() ([]Comment, error)
+	CommentsByPost(postID uuid.UUID) ([]Comment, error)
 	CreateComment(comment *Comment) error
 	UpdateComment(comment *Comment) error
 	DeleteComment(id uuid.UUID) error
