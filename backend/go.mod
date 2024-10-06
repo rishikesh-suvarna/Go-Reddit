@@ -3,8 +3,8 @@ module github.com/rishikesh-suvarna/go-reddit
 go 1.22.5
 
 require (
-	github.com/golang-migrate/migrate v3.5.4+incompatible
 	github.com/golang-migrate/migrate/v4 v4.18.1
+	github.com/jmoiron/sqlx v1.4.0
 	github.com/pborman/uuid v1.2.1
 )
 
