@@ -31,7 +31,7 @@ func (s *ThreadStore) Threads() ([]types.Thread, error) {
 }
 
 func (s *ThreadStore) CreateThread(thread *types.Thread) error {
-	err := s.Get(thread, "INSERT INTO threads (id, title, description) VALUES ($1, $2, $3) RETURNING *", thread.ID, thread.Title, thread.Description)
+	err := s.Get(thread, "INSERT INTO threads (title, description) VALUES ($1, $2) RETURNING *", thread.Title, thread.Description)
 	if err != nil {
 		return fmt.Errorf("error creating thread: %w", err)
 	}
