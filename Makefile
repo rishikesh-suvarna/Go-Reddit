@@ -2,7 +2,7 @@
 DB_URL=postgres://rishikeshsuvarna@localhost/go-reddit?sslmode=disable
 MIGRATIONS_DIR=backend/migrations
 
-.PHONY: migrate-up migrate-down migrate-create migrate-version migrate-force
+.PHONY: migrate-up migrate-down migrate-create migrate-version migrate-force migrate-up-1 migrate-down-1 serve
 
 # Run all available migrations
 migrate-up:
@@ -38,3 +38,8 @@ migrate-up-1:
 migrate-down-1:
 	@echo "Running one migration down..."
 	migrate -source file://$(MIGRATIONS_DIR) -database "$(DB_URL)" down 1
+
+# Start the server
+serve:
+	@echo "Starting server..."
+	cd backend && air

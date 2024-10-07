@@ -9,12 +9,33 @@ type PostStore struct {
 	*sqlx.DB
 }
 
-func (s *PostStore) Post(id int) (types.Post, error) {
-	var post types.Post
-	err := s.Get(&post, "SELECT * FROM posts WHERE id = $1", id)
-	if err != nil {
-		return types.Post{}, err
+func (s *PostStore) Post(id int) (*types.Post, error) {
+	// We'll use this to scan our row
+	post := &types.Post{
+		Thread: &types.Thread{}, // Initialize the Thread pointer
 	}
+
+	err := s.Get(post, `
+		SELECT 
+			p.id,
+			p.thread_id,
+			p.title,
+			p.content,
+			p.votes,
+			t.id as "thread.id",
+			t.title as "thread.title",
+			t.description as "thread.description"
+		FROM posts p
+		LEFT JOIN threads t ON t.id = p.thread_id
+		WHERE p.id = $1`, id)
+
+	if err != nil {
+		// if err == sql.ErrNoRows {
+		// 	return nil, ErrNotFound
+		// }
+		return nil, err
+	}
+
 	return post, nil
 }
 
@@ -28,7 +49,7 @@ func (s *PostStore) PostsByThread(threadID int) ([]types.Post, error) {
 }
 
 func (s *PostStore) CreatePost(post *types.Post) error {
-	err := s.Get(post, "INSERT INTO posts (id, thread_id, title, content, votes) VALUES ($1, $2, $3, $4, $5) RETURNING *", post.ID, post.ThreadID, post.Title, post.Content, post.Votes)
+	err := s.Get(post, "INSERT INTO posts (thread_id, title, content, votes) VALUES ($1, $2, $3, $4) RETURNING *", post.ThreadID, post.Title, post.Content, post.Votes)
 	if err != nil {
 		return err
 	}
