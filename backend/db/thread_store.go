@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/jmoiron/sqlx"
-	"github.com/pborman/uuid"
 	"github.com/rishikesh-suvarna/go-reddit/types"
 )
 
@@ -12,7 +11,7 @@ type ThreadStore struct {
 	*sqlx.DB
 }
 
-func (s *ThreadStore) Thread(id uuid.UUID) (types.Thread, error) {
+func (s *ThreadStore) Thread(id int) (types.Thread, error) {
 	var thread types.Thread
 	err := s.Get(&thread, "SELECT * FROM threads WHERE id = $1", id)
 	if err != nil {
@@ -46,7 +45,7 @@ func (s *ThreadStore) UpdateThread(thread *types.Thread) error {
 	return nil
 }
 
-func (s *ThreadStore) DeleteThread(id uuid.UUID) error {
+func (s *ThreadStore) DeleteThread(id int) error {
 	_, err := s.Exec("DELETE FROM threads WHERE id = $1", id)
 	if err != nil {
 		return fmt.Errorf("error deleting thread: %w", err)

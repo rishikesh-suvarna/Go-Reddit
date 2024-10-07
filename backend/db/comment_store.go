@@ -2,7 +2,6 @@ package db
 
 import (
 	"github.com/jmoiron/sqlx"
-	"github.com/pborman/uuid"
 	"github.com/rishikesh-suvarna/go-reddit/types"
 )
 
@@ -10,7 +9,7 @@ type CommentStore struct {
 	*sqlx.DB
 }
 
-func (s *CommentStore) Comment(id uuid.UUID) (types.Comment, error) {
+func (s *CommentStore) Comment(id int) (types.Comment, error) {
 	var comment types.Comment
 	err := s.Get(&comment, "SELECT * FROM comments WHERE id = $1", id)
 	if err != nil {
@@ -19,7 +18,7 @@ func (s *CommentStore) Comment(id uuid.UUID) (types.Comment, error) {
 	return comment, nil
 }
 
-func (s *CommentStore) CommentsByPost(postID uuid.UUID) ([]types.Comment, error) {
+func (s *CommentStore) CommentsByPost(postID int) ([]types.Comment, error) {
 	var comments []types.Comment
 	err := s.Select(&comments, "SELECT * FROM comments WHERE post_id = $1", postID)
 	if err != nil {
@@ -44,7 +43,7 @@ func (s *CommentStore) UpdateComment(comment *types.Comment) error {
 	return nil
 }
 
-func (s *CommentStore) DeleteComment(id uuid.UUID) error {
+func (s *CommentStore) DeleteComment(id int) error {
 	_, err := s.Exec("DELETE FROM comments WHERE id = $1", id)
 	if err != nil {
 		return err

@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/rishikesh-suvarna/go-reddit/db"
-	"github.com/rishikesh-suvarna/go-reddit/web"
+	"github.com/rishikesh-suvarna/go-reddit/routes"
 )
 
 func main() {
@@ -14,7 +14,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	handler := web.NewHandler(*store)
+	handler := routes.NewHandler(*store)
 
 	http.ListenAndServe(":8000", handler)
 }
